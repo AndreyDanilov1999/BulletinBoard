@@ -1,0 +1,46 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+Post
+{% endblock title %}
+
+{% block content %}
+   <h1>Post</h1>
+<h2> {{ post_single.title }} </h2>
+<p>
+{{ post_single.date_create| currency }}
+<p>
+   {% if post_single.file_image %}
+<img class="image_class" src="http://localhost:8000/media/{{post_single.file_image}} ">
+{% endif %}
+<p>
+{{ post_single.text }}
+<p>
+{% if post_single.file_audio %}
+   <audio
+  src="http://localhost:8000/media/{{post_single.file_audio}}"
+  controls="controls"
+>
+   </audio>
+   <p>
+   {% endif %}
+{% if post_single.file_video %}
+   <video
+   width="700"
+   height="500"
+   controls="controls">
+      <source
+              src="http://localhost:8000/media/{{post_single.file_video}}"
+              type="video/mp4"
+      />
+   </video>
+{% endif %}
+{% if post_single.author != request.user %}
+   <p><a href="{% url 'add_fb' post_single.pk %}"><input type="submit" value="FeedBack"/></a></p>
+{% endif %}
+{% if post_single.author == request.user %}
+   <p><a href="{% url 'post_edit' post_single.pk %}"><input type="submit" value="Edit" /></a></p>
+   <p><a href="{% url 'post_delete' post_single.pk %}"><input type="submit" value="Delete" /></a></p>
+{% endif %}
+{% endblock content %}

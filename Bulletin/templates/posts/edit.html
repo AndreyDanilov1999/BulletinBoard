@@ -1,0 +1,14 @@
+{% extends 'flatpages/default.html' %}
+
+
+{% block title %}
+Post
+{% endblock title %}
+ 
+{% block content %}
+<form enctype="multipart/form-data" action="" method="post">
+  {% csrf_token %}
+  {{form.as_p }}
+  <p><input type="submit" value="Save" /></p>
+</form>
+{% endblock content %}

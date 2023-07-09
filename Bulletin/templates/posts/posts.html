@@ -1,0 +1,49 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_tag %}
+{% load custom_filters %}
+
+{% block title %}
+Post
+{% endblock title %}
+
+{% block content %}
+   <h1> Posts </h1>
+<table>
+    {% if post_list %}
+    <tr>
+        <th> DateCreation </th>
+        <th>Title </th>
+        <th>Text </th>
+    </tr>
+
+           {% for list_value in post_list %}
+           <tr>
+               <td>{{ list_value.date_create|currency }}</td>
+               <td>{{ list_value.title }}</td>
+               <td>{{ list_value.text }}</td>
+               <td><p><a href="{% url 'post_single' list_value.pk %}"><input type="submit" value="Read" /></a></p></td>
+           </tr>
+           {% endfor %}
+    <hr>
+    {% else %}
+       <h2>No Posts!</h2>
+   {% endif %}
+       </table>
+{% if page_obj.has_previous %}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+{% endblock content %}

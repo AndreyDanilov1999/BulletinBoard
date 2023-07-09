@@ -1,0 +1,65 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_tag %}
+{% load custom_filters %}
+
+{% block title %}
+Post
+{% endblock title %}
+
+{% block content %}
+<h1> Profile {{ user.username }}</h1>
+<form action="" method="get">
+    {% csrf_token %}
+    {{ filterset.form.as_p }}
+    <p><input type="submit" value="Search" /></p>
+</form>
+<hr>
+<h2>All feedbacks </h2>
+{% if profile_list %}
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Post Title</th>
+        <th>User</th>
+        <th>Feedback</th>
+        <th>Status</th>
+    </tr>
+    {% for fb in profile_list %}
+    {% if fb.author != user and fb.feedbackPost.author == user %}
+    <tr>
+        <td>{{fb.date_create|currency}}</td>
+        <td>{{fb.feedbackPost}}</td>
+        <td>{{fb.author}}</td>
+        <td>{{fb.text}}</td>
+        <td>{{fb.status}}</td>
+        {% if fb.status == 'Accept' %}
+        <td><p><a href="{% url 'reject_fb' fb.pk %}"><input style="background-color:#FF4500" type="submit" value="Reject" /></a></p></td>
+        {% elif fb.status == 'Reject' %}
+        <td><p><a href="{% url 'accept_fb' fb.pk %}"><input style="background-color:#00FF00" type="submit" value="Accept" /></a></p></td>
+        {% else %}
+        <td><p><a href="{% url 'accept_fb' fb.pk %}"><input style="background-color:#00FF00" type="submit" value="Accept" /></a></p></td>
+        <td><p><a href="{% url 'reject_fb' fb.pk %}"><input style="background-color:#FF4500" type="submit" value="Reject" /></a></p></td>
+        {% endif %}
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+{% endif %}
+{% if page_obj.has_previous %}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {% if page_obj.has_next %}
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+{% endblock content %}

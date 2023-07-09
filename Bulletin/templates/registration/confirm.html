@@ -1,0 +1,12 @@
+{% extends "flatpages/default.html" %}
+
+{% block content %}
+<h1> Input the confirmation code </h1>
+<form action="" method="POST">
+{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Confirm e-mail">
+</form>
+
+
+{% endblock content %}
